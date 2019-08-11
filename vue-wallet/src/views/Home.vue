@@ -2,10 +2,15 @@
   .home
     pay-process
 
+    //- .finishedPage finishepage
+
     b-container(class="bv-example-row")
       b-row
         b-col(md="8")
+          //- keep-alive(v-if="$route.meta.keepAlive")
           router-view
+          //- keep-alive(v-if="!$route.meta.keepAlive")
+          //-   router-view
         b-col(md="4")
           booking-detail
 </template>
@@ -24,4 +29,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.finishedPage{
+  background-color: #657257;
+  height: calc(100vh - 60px);
+}
 </style>

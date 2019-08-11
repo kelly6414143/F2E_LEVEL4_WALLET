@@ -21,9 +21,14 @@
                     b-col NT$4440
             b-row.buttonRow(no-gutters)
                     b-col 
-                        b-button(
+                        b-button(v-if="isPaymentDetail")(
                           type="submit",
-                          variant="dark") 繼續購物
+                          variant="dark",
+                           @click="toPre") 回上一步
+                        b-button(v-if="!isPaymentDetail")(
+                          type="submit",
+                          variant="dark",
+                          @click="toShopping") 繼續購物
                     b-col 
                         b-button(
                           type="submit",
@@ -32,11 +37,22 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      isPaymentDetail : false
+    };
   },
   methods: {
     toSubmit() {
+      this.$store.commit('setIdDone',true)
       this.$router.push({ path: "/paymentDetail" });
+      this.isPaymentDetail = true
+    },
+    toPre(){
+      this.$router.push({ path: "/mainPage" });
+      this.isPaymentDetail = false
+    },
+    toShopping(){
+      alert('go shopping')
     }
   }
 };

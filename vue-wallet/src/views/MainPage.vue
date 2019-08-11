@@ -26,28 +26,35 @@
                     id="input-1"
                     type="email"
                     required
-                    placeholder="業大雄"
+                    placeholder="葉大雄"
                 )
             b-col(md="6")
               b-form-group(
                 id="input-group-2" 
-                label="電話" 
+                label="手機電話" 
                 label-for="input-2")
                 b-form-input(
                     id="input-2"
+                    v-model="form.phoneNumber"
                     required
+                    :state="validationPhone"
                     placeholder="0912345678"
                 )
+                b-form-invalid-feedback(:state="validationPhone") 手機格式錯誤
+                b-form-valid-feedback(:state="validationPhone") 正確
         b-form-group(
                 id="input-group-3" 
                 label="E-mail" 
                 label-for="input-3")
           b-form-input(
               id="input-3"
+              v-model="form.email"
               required
               placeholder="a123@gmail.com"
+              :state="validationEmail"
           )
-
+          b-form-invalid-feedback(:state="validationEmail") 信箱格式錯誤
+          b-form-valid-feedback(:state="validationEmail") 正確
         b-form-group(
           id="input-group-3" 
           label="地址" 
@@ -69,7 +76,8 @@ export default {
         email: "",
         name: "",
         food: null,
-        checked: []
+        checked: [],
+        phoneNumber:''
       },
       foods: [
         { text: "Select One", value: null },
@@ -80,6 +88,16 @@ export default {
       ],
       show: true
     };
+  },
+  computed:{
+    validationPhone(){
+      let valid = /^09[0-9]{8}$/
+      return valid.test(this.form.phoneNumber)
+    },
+    validationEmail(){
+      let valid = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
+      return valid.test(this.form.email)
+    }
   },
   methods: {
     onSubmit() {},

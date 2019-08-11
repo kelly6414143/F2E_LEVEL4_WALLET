@@ -10,7 +10,7 @@
                 b-form-input(
                     id="input-1"
                     required
-                    placeholder="業大雄"
+                    placeholder="葉大雄"
                 )
 
             b-form-group(
@@ -21,13 +21,16 @@
                 b-input-group
                     b-form-input(
                         id="input-2",
+                        v-model= "creditCard",
                         required,
                         placeholder="0000-0000-0000-0000",
-                        :state="false"
+                        :state="validationCard"
                         ) 
                     b-input-group-append(is-text)                      
                         img(src="@/assets/images/baseline-credit_card.svg")
-                b-form-invalid-feedback(id="input-live-feedback") 格式錯誤
+                b-form-invalid-feedback(
+                  id="input-live-feedback",
+                  :state="validationCard") 信用卡格式錯誤
                 //- b-col(md="6")
             b-form-group(
                 id="input-group-3"
@@ -37,8 +40,8 @@
                     b-col(md="6")
                         b-form-select(
                             id="input-3"
-                            v-model="form.food"
-                            :options="foods"
+                            v-model="form.month"
+                            :options="month"
                             required,
                             :state="false")
                             option(:value="null") 選擇年份
@@ -67,21 +70,29 @@ export default {
   name: "paymentdetail",
   data() {
     return {
+      creditCard: "",
       form: {
-        email: "",
+        creditCard: "",
         name: "",
-        food: null,
-        checked: []
+        month: null,
+        year: null
       },
-      foods: [
-        // { text: "Select One", value: null },
-        "Carrots",
-        "Beans",
-        "Tomatoes",
-        "Corn"
-      ],
+      month: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+      year: ["2019", "2020", "2021", "2022", "2033"],
       show: true
     };
+  },
+  computed: {
+    validationCard() {
+      // let valid = /^09[0-9]{8}$/
+      return false;
+    }
+  },
+  watch: {
+    creditCard() {
+      let arr = [];
+      this.creditCard;
+    }
   },
   methods: {
     onSubmit() {},
