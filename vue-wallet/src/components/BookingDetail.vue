@@ -1,0 +1,91 @@
+<template lang="pug">
+    .bookingDetail
+        h4 訂單明細
+        b-card
+            b-list-group(flush)
+                b-list-group-item
+                    b-row(no-gutters)
+                        b-col(md="4")
+                            b-card-img(src="https://picsum.photos/400/400/?image=20" class="rounded-0")
+                        b-col.bookingDetail_detail(md="8")
+                            .bookingDetail_detail_title 私房茶禮盒
+                            .bookingDetail_detail_price NT$888
+                    b-row(no-gutters)
+                        b-col 數量
+                        b-col 5
+                    b-row(no-gutters)
+                        b-col 小計
+                        b-col NT$4440
+            b-row.totalRow(no-gutters)
+                    b-col 總計
+                    b-col NT$4440
+            b-row.buttonRow(no-gutters)
+                    b-col 
+                        b-button(
+                          type="submit",
+                          variant="dark") 繼續購物
+                    b-col 
+                        b-button(
+                          type="submit",
+                          @click="toSubmit") 確認送出
+</template>
+<script>
+export default {
+  data() {
+    return {};
+  },
+  methods: {
+    toSubmit() {
+      this.$router.push({ path: "/paymentDetail" });
+    }
+  }
+};
+</script>
+
+
+<style lang="scss" scoped>
+.bookingDetail {
+  box-sizing: border-box;
+  .row {
+    margin: 5px 0;
+    .col {
+      &:nth-child(2) {
+        text-align: right;
+      }
+    }
+  }
+
+  .list-group-item {
+    padding: 0;
+  }
+  &_detail {
+    padding-left: 10px;
+    &_title {
+      font-weight: bolder;
+      margin-bottom: 5px;
+    }
+    &_price {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 12px;
+    }
+  }
+  .totalRow {
+    margin: 20px 0;
+  }
+  .buttonRow {
+    .col {
+      margin: 0 5px;
+      &:nth-child(1) {
+        text-align: right;
+      }
+      &:nth-child(2) {
+        text-align: left;
+        button {
+          background-color: #657257;
+        }
+      }
+    }
+  }
+}
+</style>
+

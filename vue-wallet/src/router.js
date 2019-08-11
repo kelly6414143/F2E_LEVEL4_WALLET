@@ -8,12 +8,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
+      // name: 'home',
       component: Home,
       children:[
         {
-          path:'/content',
-          name: 'content'
+          path:'',
+          name: 'home',
+          component: () => import(/* webpackChunkName: "MainPage" */ './views/MainPage.vue'),
+        },
+        {
+          path:'/paymentDetail',
+          name: 'Paymentdetail',
+          component: () => import(/* webpackChunkName: "PaymentDetail" */ './views/PaymentDetail.vue'),
         }
       ]
     },
