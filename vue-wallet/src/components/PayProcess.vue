@@ -3,7 +3,7 @@
     div
       b-navbar(toggleable="lg",
       variant="faded",
-      type="light")
+      type="light") 專案正在進行中
         b-container(class="bv-example-row")
           b-col
             span.circle.finished

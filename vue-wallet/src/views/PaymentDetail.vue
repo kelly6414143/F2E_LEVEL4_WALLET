@@ -40,16 +40,16 @@
                     b-col(md="6")
                         b-form-select(
                             id="input-3"
-                            v-model="form.month"
-                            :options="month"
+                            v-model="form.year"
+                            :options="year"
                             required,
                             :state="false")
                             option(:value="null") 選擇年份
                     b-col(md="6")
                         b-form-select(
                             id="input-3"
-                            v-model="form.food"
-                            :options="foods"
+                            v-model="form.month"
+                            :options="month"
                             required,
                             :state="false")
                             option(:value="null") 選擇月份
