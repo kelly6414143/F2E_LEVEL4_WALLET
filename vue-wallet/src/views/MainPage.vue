@@ -20,31 +20,36 @@
             b-col(md="6")
               b-form-group(
                 id="input-group-1"
-                label="姓名"
+                label="*姓名"
                 label-for="input-1")
                 b-form-input(
-                    id="input-1"
-                    type="email"
-                    required
-                    placeholder="葉大雄"
+                    id="input-1",
+                    type="email",
+                    v-model="form.name",
+                    required,
+                    placeholder="葉大雄",
+                    :state="validationName"
                 )
+                b-form-invalid-feedback(:state="validationName") {{nameMsg}}
+                b-form-valid-feedback(:state="validationName") 正確
             b-col(md="6")
               b-form-group(
                 id="input-group-2" 
-                label="手機電話" 
+                label="*手機電話" 
                 label-for="input-2")
                 b-form-input(
-                    id="input-2"
-                    v-model="form.phoneNumber"
-                    required
-                    :state="validationPhone"
-                    placeholder="0912345678"
+                    id="input-2",
+                    v-model="form.phoneNumber",
+                    required,
+                    :state="validationPhone",
+                    placeholder="0912345678",
+                    maxLength = 10
                 )
-                b-form-invalid-feedback(:state="validationPhone") 手機格式錯誤
+                b-form-invalid-feedback(:state="validationPhone") {{phoneMsg}}
                 b-form-valid-feedback(:state="validationPhone") 正確
         b-form-group(
                 id="input-group-3" 
-                label="E-mail" 
+                label="*E-mail" 
                 label-for="input-3")
           b-form-input(
               id="input-3"
@@ -53,7 +58,7 @@
               placeholder="a123@gmail.com"
               :state="validationEmail"
           )
-          b-form-invalid-feedback(:state="validationEmail") 信箱格式錯誤
+          b-form-invalid-feedback(:state="validationEmail") {{emailMsg}}
           b-form-valid-feedback(:state="validationEmail") 正確
         b-form-group(
           id="input-group-3" 
@@ -75,28 +80,113 @@ export default {
       form: {
         email: "",
         name: "",
-        food: null,
-        checked: [],
-        phoneNumber:''
+        phoneNumber: ""
       },
-      foods: [
-        { text: "Select One", value: null },
-        "Carrots",
-        "Beans",
-        "Tomatoes",
-        "Corn"
-      ],
-      show: true
+      show: true,
+      phoneMsg: "",
+      emailMsg: "",
+      nameMsg: ""
     };
   },
-  computed:{
-    validationPhone(){
-      let valid = /^09[0-9]{8}$/
-      return valid.test(this.form.phoneNumber)
+  computed: {
+    validationName() {
+      if (this.$store.state.isMainpageSubmit) {
+        if (this.form.name === "") {
+          this.nameMsg = "必填";
+          this.$store.commit("setValidMainPageName", { name: this.form.name });
+          return false;
+        } else {
+          this.nameMsg = "";
+          this.$store.commit("setValidMainPageName", { name: this.form.name });
+          return true;
+        }
+      } else {
+        if (this.form.name === "") {
+          return null;
+        } else {
+          this.nameMsg = "";
+          this.$store.commit("setValidMainPageName", { name: this.form.name });
+        }
+      }
     },
-    validationEmail(){
-      let valid = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
-      return valid.test(this.form.email)
+    validationPhone() {
+      let vm = this;
+      function toCheckNumber(value) {
+        if (isNaN(value)) {
+          vm.phoneMsg = "請輸入數字";
+          return false;
+        } else {
+          vm.phoneMsg = "";
+          if (value.length === 10) {
+            vm.$store.commit("setValidMainPagePhone", {
+              phone: true
+            });
+            return true;
+          }
+        }
+      }
+
+      let firstWord = "";
+      if (this.$store.state.isMainpageSubmit) {
+        if (this.form.phoneNumber === "") {
+          this.phoneMsg = "必填";
+          this.$store.commit("setValidMainPagePhone", { phone: false });
+          return false;
+        } else {
+          this.phoneMsg = "";
+          if (this.form.phoneNumber.length < 10) {
+            this.phoneMsg = "請輸入10位數，格式為0912345678";
+            this.$store.commit("setValidMainPagePhone", { phone: false });
+            return false;
+          }
+          // return true;
+        }
+      }
+
+      if (this.form.phoneNumber === "") {
+        return null;
+      } else if (this.form.phoneNumber.length === 1) {
+        firstWord = this.form.phoneNumber.substring(0, 1);
+        if (firstWord !== "0") {
+          this.phoneMsg = "手機格式錯誤";
+          this.$store.commit("setValidMainPagePhone", {
+            phone: false
+          });
+          return false;
+        }
+      } else if (this.form.phoneNumber.length > 1) {
+        firstWord = this.form.phoneNumber.substring(0, 2);
+        if (firstWord !== "09") {
+          this.phoneMsg = "手機格式錯誤";
+          this.$store.commit("setValidMainPagePhone", {
+            phone: false
+          });
+          return false;
+        } else {
+          return toCheckNumber(this.form.phoneNumber);
+        }
+      }
+    },
+    validationEmail() {
+      if (this.$store.state.isMainpageSubmit) {
+        if (this.form.email === "") {
+          this.emailMsg = "必填";
+          this.$store.commit("setValidMainPageEmail", { email: false });
+          return false;
+        } else {
+          this.emailMsg = "";
+          // return true;
+        }
+      }
+      if (this.form.email === "") {
+        return null;
+      }
+      let valid = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+      this.emailMsg = "請輸入含有「＠」信箱格式";
+      this.$store.commit("setValidMainPageEmail", {
+        email: valid.test(this.form.email)
+      });
+      return valid.test(this.form.email);
     }
   },
   methods: {

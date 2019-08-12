@@ -3,17 +3,28 @@
     div
       b-navbar(toggleable="lg",
       variant="faded",
-      type="light") 專案正在進行中
+      type="light")
         b-container(class="bv-example-row")
           b-col
-            span.circle.finished
-              i(class="material-icons") check
+            span.circle(:class="$store.state.isFinishedMainPage?'finished':'working'")
+              i(v-if="$store.state.isFinishedMainPage",
+              class="material-icons") check
             span 付款方式
           b-col
-            span.circle.working
+            -const stylebg = {"background-color": "#657257"}
+            span.circle(
+              :class="$store.state.isFinishedMainPage?'working':''",
+              :style="$store.state.isFinished?stylebg:''"
+            )
+              -const styleJson={"color": "#ffffff","font-size": "12px","line-height": "20px"}
+              i(v-if="$store.state.isFinished",
+                style=styleJson,
+                class="material-icons") check
             span 最後確認
           b-col
-            span.circle
+            span.circle(:class="$store.state.isFinished?'finished':''")
+              i(v-if="$store.state.isFinished",
+              class="material-icons") check
             span 完成
 </template>
 
@@ -50,7 +61,7 @@ export default {
     flex-direction: column;
   }
   .circle {
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     border: 1px solid #657257;
     border-radius: 50%;
     color: #657257;

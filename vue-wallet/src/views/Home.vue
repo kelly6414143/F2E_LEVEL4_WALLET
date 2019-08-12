@@ -2,15 +2,17 @@
   .home
     pay-process
 
-    //- .finishedPage finishepage
+    .finishedPage(v-if="$store.state.isFinished") finishepage
 
-    b-container(class="bv-example-row")
+    b-container(
+      class="bv-example-row",
+      v-if="!$store.state.isFinished")
       b-row
         b-col(md="8")
-          //- keep-alive(v-if="$route.meta.keepAlive")
-          router-view
-          //- keep-alive(v-if="!$route.meta.keepAlive")
-          //-   router-view
+          keep-alive(v-if="$route.meta.keepAlive")
+            router-view
+          keep-alive(v-if="!$route.meta.keepAlive")
+            router-view
         b-col(md="4")
           booking-detail
 </template>
@@ -29,8 +31,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.finishedPage{
+.finishedPage {
   background-color: #657257;
+  color: white;
+  font-size: 36px;
   height: calc(100vh - 60px);
+  text-align: center;
+  text-transform: uppercase;
 }
 </style>

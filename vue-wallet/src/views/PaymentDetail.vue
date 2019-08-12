@@ -8,10 +8,15 @@
                 label="持卡人姓名" 
                 label-for="input-1")
                 b-form-input(
-                    id="input-1"
-                    required
+                    id="input-1",
+                    required,
+                    v-model="form.name",
+                    :state="validationName",
                     placeholder="葉大雄"
                 )
+                b-form-invalid-feedback(
+                  id="input-live-feedback",
+                  :state="validationName") {{nameMsg}}
 
             b-form-group(
                     id="input-group-2" 
@@ -24,14 +29,14 @@
                         v-model= "creditCard",
                         required,
                         placeholder="0000-0000-0000-0000",
-                        :state="validationCard"
+                        :state="validationCard",
+                        maxlength="19"
                         ) 
                     b-input-group-append(is-text)                      
                         img(src="@/assets/images/baseline-credit_card.svg")
                 b-form-invalid-feedback(
                   id="input-live-feedback",
-                  :state="validationCard") 信用卡格式錯誤
-                //- b-col(md="6")
+                  :state="validationCard") {{cardMsg}}
             b-form-group(
                 id="input-group-3"
                 label="信用卡期限"
@@ -43,26 +48,38 @@
                             v-model="form.year"
                             :options="year"
                             required,
-                            :state="false")
+                            :state="validationYear")
                             option(:value="null") 選擇年份
+                        b-form-invalid-feedback(
+                          id="input-live-feedback",
+                          :state="validationYear") {{yearMsg}}
                     b-col(md="6")
                         b-form-select(
                             id="input-3"
                             v-model="form.month"
                             :options="month"
                             required,
-                            :state="false")
+                            :state="validationMonth")
                             option(:value="null") 選擇月份
+                        b-form-invalid-feedback(
+                          id="input-live-feedback",
+                          :state="validationMonth") {{monthMsg}}
                 
         b-form-group(
                 id="input-group-4" 
                 label="背面安全碼" 
                 label-for="input-4")
           b-form-input(
-              id="input-4"
-              required
-              placeholder="123"
+              id="input-4",
+              required,
+              v-model="securityNum",
+              placeholder="123",
+              maxlength="3",
+              :state="validationSecurity"
           )
+          b-form-invalid-feedback(
+            id="input-live-feedback",
+            :state="validationSecurity") {{securityMsg}}
 </template>
 
 <script>
@@ -71,6 +88,7 @@ export default {
   data() {
     return {
       creditCard: "",
+      securityNum: "",
       form: {
         creditCard: "",
         name: "",
@@ -79,19 +97,98 @@ export default {
       },
       month: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
       year: ["2019", "2020", "2021", "2022", "2033"],
-      show: true
+      show: true,
+      cardMsg: "",
+      yearMsg: "",
+      monthMsg: "",
+      securityMsg: "",
+      nameMsg:""
     };
   },
+  created(){
+    this.form.name = this.$store.state.validMainPage.name
+  },
   computed: {
+    validationName() {
+      if (this.$store.state.isMainpageSubmit) {
+        if (this.form.name === "") {
+          this.nameMsg = "必填";
+          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+          return false;
+        } else {
+          this.nameMsg = "";
+          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+          return true;
+        }
+      } else {
+        if (this.form.name === "") {
+          return null;
+        } else {
+          this.nameMsg = "";
+          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+        }
+      }
+    },
     validationCard() {
-      // let valid = /^09[0-9]{8}$/
-      return false;
+      let valid = this.creditCard;
+      if(valid===""){
+        this.cardMsg = "必填";
+        return false
+      }
+      if (isNaN(valid)) {
+        this.cardMsg = "請輸入數字";
+        if (valid.indexOf("-") > 0) {
+          valid = valid.split("-");
+          let format = valid.filter(x => isNaN(Number(x)));
+          if (format.length === 0) {
+            if (valid.length === 4 && valid[3].length === 4) {
+              return true;
+            }
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+    },
+    validationYear() {
+      if(this.form.year===null){
+        this.yearMsg="必填"
+        return false
+      }
+      return null;
+    },
+    validationMonth() {
+      if(this.form.month===null){
+        this.monthMsg="必填"
+        return false
+      }
+      return null;
+    },
+    validationSecurity() {
+      let valid = this.securityNum;
+      if(this.securityNum===""){
+        this.securityMsg="必填"
+        return false
+      }
+      if (isNaN(valid)) {
+        this.securityMsg = "請輸入數字";
+        return false;
+      }
     }
   },
   watch: {
     creditCard() {
-      let arr = [];
-      this.creditCard;
+      for (let i = 0; i < this.creditCard.length; i = i + 4) {
+        if (this.creditCard.length === 4) {
+          this.creditCard = `${this.creditCard}-`;
+        } else if (this.creditCard.length === 4 * 2 + 1) {
+          this.creditCard = `${this.creditCard}-`;
+        } else if (this.creditCard.length === 4 * 3 + 2) {
+          this.creditCard = `${this.creditCard}-`;
+        }
+      }
     }
   },
   methods: {

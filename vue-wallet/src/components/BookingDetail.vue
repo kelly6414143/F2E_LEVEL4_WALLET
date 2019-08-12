@@ -31,8 +31,13 @@
                           @click="toShopping") 繼續購物
                     b-col 
                         b-button(
+                          v-if="!isPaymentDetail",
                           type="submit",
-                          @click="toSubmit") 確認送出
+                          @click="toSubmitMain") 確認送出
+                        b-button(
+                          v-if="isPaymentDetail",
+                          type="submit",
+                          @click="toSubmitPayment") 確認送出
 </template>
 <script>
 export default {
@@ -42,13 +47,23 @@ export default {
     };
   },
   methods: {
-    toSubmit() {
+    toSubmitMain() {
+      this.$store.commit('setMainPageSubmit',true)
       this.$store.commit('setIdDone',true)
+      if(!this.$store.state.validMainPage.name||!this.$store.state.validMainPage.email||!this.$store.state.validMainPage.phone){
+        return
+      }
       this.$router.push({ path: "/paymentDetail" });
       this.isPaymentDetail = true
+      this.$store.commit('setFinishedMainpage',true)
+    },
+    toSubmitPayment(){
+       console.log('final')
+       this.$store.commit('setFinishedStatus',true)
     },
     toPre(){
       this.$router.push({ path: "/mainPage" });
+      this.$store.commit('setFinishedMainpage',false)
       this.isPaymentDetail = false
     },
     toShopping(){
