@@ -102,22 +102,22 @@ export default {
       yearMsg: "",
       monthMsg: "",
       securityMsg: "",
-      nameMsg:""
+      nameMsg: ""
     };
   },
-  created(){
-    this.form.name = this.$store.state.validMainPage.name
+  created() {
+    this.form.name = this.$store.state.validMainPage.name;
   },
   computed: {
     validationName() {
-      if (this.$store.state.isMainpageSubmit) {
+      if (this.$store.state.isPaymentpageSubmit) {
         if (this.form.name === "") {
           this.nameMsg = "必填";
-          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+          this.$store.commit("setPaymentPageName", { name: false });
           return false;
         } else {
           this.nameMsg = "";
-          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+          this.$store.commit("setPaymentPageName", { name: true });
           return true;
         }
       } else {
@@ -125,70 +125,177 @@ export default {
           return null;
         } else {
           this.nameMsg = "";
-          // this.$store.commit("setValidMainPageName", { name: this.form.name });
+          this.$store.commit("setPaymentPageName", { name: true });
+          return true;
         }
       }
     },
     validationCard() {
-      let valid = this.creditCard;
-      if(valid===""){
-        this.cardMsg = "必填";
-        return false
+      let valid = this.creditCard.replace(/-/g, "");
+      if (this.$store.state.isPaymentpageSubmit) {
+        if (valid === "") {
+          this.cardMsg = "必填";
+          this.$store.commit("setPaymentPageCardNum", { cardNum: false });
+          return false;
+        }
+      }
+      if (valid === "") {
+        this.securityMsg = "";
+        return null;
       }
       if (isNaN(valid)) {
-        this.cardMsg = "請輸入數字";
-        if (valid.indexOf("-") > 0) {
-          valid = valid.split("-");
-          let format = valid.filter(x => isNaN(Number(x)));
-          if (format.length === 0) {
-            if (valid.length === 4 && valid[3].length === 4) {
-              return true;
-            }
-          } else {
-            return false;
-          }
+        this.cardMsg = "請輸入16位數字";
+        this.$store.commit("setPaymentPageCardNum", { cardNum: false });
+        return false;
+      } else {
+        console.log(valid.length);
+        if (valid.length === 16) {
+          this.$store.commit("setPaymentPageCardNum", { cardNum: true });
+          return true;
         } else {
+          this.cardMsg = "請輸入16位數字";
+          this.$store.commit("setPaymentPageCardNum", { cardNum: false });
           return false;
         }
       }
     },
     validationYear() {
-      if(this.form.year===null){
-        this.yearMsg="必填"
-        return false
+      if (this.$store.state.isPaymentpageSubmit) {
+        if (this.form.year === null) {
+          this.yearMsg = "必填";
+          this.$store.commit("setPaymentPageYear", { year: false });
+          return false;
+        } else {
+          this.yearMsg = "";
+          this.$store.commit("setPaymentPageYear", { year: true });
+          return true;
+        }
       }
       return null;
     },
     validationMonth() {
-      if(this.form.month===null){
-        this.monthMsg="必填"
-        return false
+      if (this.$store.state.isPaymentpageSubmit) {
+        if (this.form.month === null) {
+          this.monthMsg = "必填";
+          this.$store.commit("setPaymentPageMonth", { month: false });
+          return false;
+        } else {
+          this.monthMsg = "";
+          this.$store.commit("setPaymentPageMonth", { month: true });
+          return true;
+        }
       }
       return null;
     },
     validationSecurity() {
-      let valid = this.securityNum;
-      if(this.securityNum===""){
-        this.securityMsg="必填"
-        return false
+      let valid = valid;
+      if (this.$store.state.isPaymentpageSubmit) {
+        if (this.securityNum === "") {
+          this.securityMsg = "必填";
+          this.$store.commit("setPaymentPageSecurityNum", {
+            securityNum: false
+          });
+          return false;
+        }
       }
+      if (this.securityMsg === "") {
+        this.securityMsg = "";
+        return null;
+      } 
+      console.log(isNaN(valid))
+
       if (isNaN(valid)) {
         this.securityMsg = "請輸入數字";
+        this.$store.commit("setPaymentPageSecurityNum", {
+          securityNum: false
+        });
         return false;
+      } else {
+        console.log(valid)
+        if (valid.length === 3) {
+          this.monthMsg = "";
+          this.$store.commit("setPaymentPageSecurityNum", {
+            securityNum: true
+          });
+          return true;
+        }
       }
     }
   },
   watch: {
     creditCard() {
-      for (let i = 0; i < this.creditCard.length; i = i + 4) {
-        if (this.creditCard.length === 4) {
-          this.creditCard = `${this.creditCard}-`;
-        } else if (this.creditCard.length === 4 * 2 + 1) {
-          this.creditCard = `${this.creditCard}-`;
-        } else if (this.creditCard.length === 4 * 3 + 2) {
-          this.creditCard = `${this.creditCard}-`;
+      let string = "";
+      let arr = [];
+      this.creditCard = this.creditCard.replace(/-/g, "");
+
+      // let length = parseInt(this.creditCard.length / 4);
+      // let res = this.creditCard.length % 4;
+      // res = res === 0 ? 4 : res;
+      // if (length > 0) {
+      //   for (let i = 0; i <length; i++) {
+      //     string = this.creditCard.slice(i * 4, (i + 1) * 4);
+      //     console.log(string);
+      //     arr.push(`${string}-`);
+      //   }
+      // this.creditCard=arr.join("")
+      // if(this.creditCard.length>19){
+      //   this.creditCard=this.creditCard.substring(0,18)
+      // }
+      // }
+
+      let vm = this;
+      let length = parseInt(this.creditCard.length / 4);
+      let res = this.creditCard.length % 4;
+      res = res === 0 ? 4 : res;
+
+      function cardNumberStructure(length) {
+        for (let i = 0; i <= length; i++) {
+          if (i === 0) {
+            if (length === i) {
+              string = vm.creditCard.slice(i * 4, i * 4 + res);
+            } else {
+              string = vm.creditCard.slice(i * 4, (i + 1) * 4);
+            }
+          } else if (i === 1) {
+            if (length === i) {
+              string = vm.creditCard.slice(i * 4, i * 4 + res);
+            } else {
+              string = vm.creditCard.slice(i * 4, (i + 1) * 4);
+            }
+          } else if (i === 2) {
+            if (length === i) {
+              string = vm.creditCard.slice(i * 4, i * 4 + res);
+            } else {
+              string = vm.creditCard.slice(i * 4, (i + 1) * 4);
+            }
+          } else if (i === 3) {
+            string = vm.creditCard.slice(i * 4, i * 4 + res);
+          }
+          arr.push(`${string}`);
+        }
+        vm.creditCard = arr.join("-");
+        if (vm.creditCard.length > 19) {
+          vm.creditCard = vm.creditCard.substring(0, 19);
         }
       }
+
+      if (length > 2) {
+        cardNumberStructure(length);
+      } else if (length > 1) {
+        cardNumberStructure(length);
+      } else if (length > 0) {
+        cardNumberStructure(length);
+      }
+
+      // for (let i = 0; i < this.creditCard.length; i = i + 4) {
+      //   if (this.creditCard.length === 4) {
+      //     this.creditCard = `${this.creditCard}-`;
+      //   } else if (this.creditCard.length === 4 * 2 + 1) {
+      //     this.creditCard = `${this.creditCard}-`;
+      //   } else if (this.creditCard.length === 4 * 3 + 2) {
+      //     this.creditCard = `${this.creditCard}-`;
+      //   }
+      // }
     }
   },
   methods: {

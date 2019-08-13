@@ -78,9 +78,9 @@ export default {
   data() {
     return {
       form: {
-        email: "",
-        name: "",
-        phoneNumber: ""
+        email: "jie@gmail.com",
+        name: "dd",
+        phoneNumber: "0988888888"
       },
       show: true,
       phoneMsg: "",
