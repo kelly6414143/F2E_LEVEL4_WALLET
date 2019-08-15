@@ -38,19 +38,19 @@ export default new Vuex.Store({
       state.validMainPage.phone = valid.phone
     },
     setPaymentPageName(state, boolean){
-      state.validPaymentPage.name = boolean
+      state.validPaymentPage.name = boolean.name 
     },
     setPaymentPageCardNum(state, boolean){
-      state.validPaymentPage.cardNum = boolean
+      state.validPaymentPage.cardNum = boolean.cardNum
     },
     setPaymentPageYear(state, boolean){
-      state.validPaymentPage.year = boolean
+      state.validPaymentPage.year = boolean.year
     },
     setPaymentPageMonth(state, boolean){
-      state.validPaymentPage.month = boolean
+      state.validPaymentPage.month = boolean.month
     },
     setPaymentPageSecurityNum(state, boolean){
-      state.validPaymentPage.securityNum = boolean
+      state.validPaymentPage.securityNum = boolean.securityNum
     },
     setMainPageSubmit(state, boolean){
       state.isMainpageSubmit = boolean

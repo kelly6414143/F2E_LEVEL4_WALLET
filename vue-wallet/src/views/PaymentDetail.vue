@@ -148,7 +148,6 @@ export default {
         this.$store.commit("setPaymentPageCardNum", { cardNum: false });
         return false;
       } else {
-        console.log(valid.length);
         if (valid.length === 16) {
           this.$store.commit("setPaymentPageCardNum", { cardNum: true });
           return true;
@@ -188,9 +187,9 @@ export default {
       return null;
     },
     validationSecurity() {
-      let valid = valid;
+      let valid = this.securityNum;
       if (this.$store.state.isPaymentpageSubmit) {
-        if (this.securityNum === "") {
+        if (valid === "") {
           this.securityMsg = "必填";
           this.$store.commit("setPaymentPageSecurityNum", {
             securityNum: false
@@ -201,8 +200,7 @@ export default {
       if (this.securityMsg === "") {
         this.securityMsg = "";
         return null;
-      } 
-      console.log(isNaN(valid))
+      }
 
       if (isNaN(valid)) {
         this.securityMsg = "請輸入數字";
@@ -211,7 +209,6 @@ export default {
         });
         return false;
       } else {
-        console.log(valid)
         if (valid.length === 3) {
           this.monthMsg = "";
           this.$store.commit("setPaymentPageSecurityNum", {

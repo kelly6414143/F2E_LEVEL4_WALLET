@@ -59,7 +59,6 @@ export default {
     },
     toSubmitPayment(){
        this.$store.commit('setPaymentpageSubmit',true)
-       console.log(!this.$store.state.validPaymentPage.name,!this.$store.state.validPaymentPage.cardNum,!this.$store.state.validPaymentPage.year,!this.$store.state.validPaymentPage.month,!this.$store.state.validPaymentPage.securityNum)
         if(!this.$store.state.validPaymentPage.name||!this.$store.state.validPaymentPage.cardNum||!this.$store.state.validPaymentPage.year||!this.$store.state.validPaymentPage.month||!this.$store.state.validPaymentPage.securityNum){
         return
       }

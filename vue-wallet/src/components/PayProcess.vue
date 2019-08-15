@@ -11,12 +11,11 @@
               class="material-icons") check
             span 付款方式
           b-col
-            -const stylebg = {"background-color": "#657257"}
             span.circle(
               :class="$store.state.isFinishedMainPage?'working':''",
               :style="$store.state.isFinished?stylebg:''"
             )
-              -const styleJson={"color": "#ffffff","font-size": "12px","line-height": "20px"}
+              -const styleJson={"color": "#ffffff","font-size": "12px","line-height": "20px","position":"relative","z-index":"1"}
               i(v-if="$store.state.isFinished",
                 style=styleJson,
                 class="material-icons") check
@@ -30,7 +29,12 @@
 
 <script>
 export default {
-  name: "PayProcess"
+  name: "PayProcess",
+  data(){
+    return{
+      stylebg : {"background-color": "#657257"}
+    }
+  }
 };
 </script>
 
