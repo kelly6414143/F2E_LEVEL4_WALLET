@@ -44,6 +44,7 @@
                     :state="validationPhone",
                     placeholder="0912345678",
                     maxLength = 10
+                    @input="getNumberChange($event)"
                 )
                 b-form-invalid-feedback(:state="validationPhone") {{phoneMsg}}
                 b-form-valid-feedback(:state="validationPhone") 正確
@@ -78,9 +79,9 @@ export default {
   data() {
     return {
       form: {
-        email: "jie@gmail.com",
-        name: "dd",
-        phoneNumber: "0988888888"
+        email: "",
+        name: "",
+        phoneNumber: ""
       },
       show: true,
       phoneMsg: "",
@@ -106,6 +107,7 @@ export default {
         } else {
           this.nameMsg = "";
           this.$store.commit("setValidMainPageName", { name: this.form.name });
+          return true;
         }
       }
     },
@@ -190,6 +192,14 @@ export default {
     }
   },
   methods: {
+    getNumberChange(value) {
+      let length = value.length-1;
+      if (isNaN(value)) {
+        this.$nextTick(()=>{
+          this.form.phoneNumber = value.substring(0, length);
+        })
+      }
+    },
     onSubmit() {},
     onReset() {}
   }

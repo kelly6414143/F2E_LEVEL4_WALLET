@@ -5,7 +5,7 @@
         b-form(@submit="onSubmit" @reset="onReset")
             b-form-group(
                 id="input-group-1" 
-                label="持卡人姓名" 
+                label="*持卡人姓名" 
                 label-for="input-1")
                 b-form-input(
                     id="input-1",
@@ -20,7 +20,7 @@
 
             b-form-group(
                     id="input-group-2" 
-                    label="信用卡號" 
+                    label="*信用卡號" 
                     label-for="input-2")
                 
                 b-input-group
@@ -39,7 +39,7 @@
                   :state="validationCard") {{cardMsg}}
             b-form-group(
                 id="input-group-3"
-                label="信用卡期限"
+                label="*信用卡期限"
                 label-for="input-3")
                 b-row
                     b-col(md="6")
@@ -67,7 +67,7 @@
                 
         b-form-group(
                 id="input-group-4" 
-                label="背面安全碼" 
+                label="*背面安全碼" 
                 label-for="input-4")
           b-form-input(
               id="input-4",
@@ -188,6 +188,12 @@ export default {
     },
     validationSecurity() {
       let valid = this.securityNum;
+      let length = valid.length - 1;
+      if (isNaN(valid)) {
+        this.$nextTick(() => {
+          this.securityNum = valid.substring(0, length);
+        });
+      }
       if (this.$store.state.isPaymentpageSubmit) {
         if (valid === "") {
           this.securityMsg = "必填";
@@ -224,6 +230,12 @@ export default {
       let string = "";
       let arr = [];
       this.creditCard = this.creditCard.replace(/-/g, "");
+      let cardLength = this.creditCard.length - 1;
+      if (isNaN(this.creditCard)) {
+        this.$nextTick(() => {
+          this.creditCard = this.creditCard.substring(0, cardLength);
+        });
+      }
 
       // let length = parseInt(this.creditCard.length / 4);
       // let res = this.creditCard.length % 4;
